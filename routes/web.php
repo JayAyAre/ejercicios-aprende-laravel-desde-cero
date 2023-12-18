@@ -20,12 +20,55 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Ejercicio 1
+//Ejercicio 2
 
-Route::get('/ejercicio1', function () {
-    return "GET OK";
+Route::post('/ejercicio2/a', function (Request $request) {
+    $product = ([
+        'name' => $request->get('name'),
+        'description' => $request->get('description'),
+        'price' => $request->get('price'),
+    ]);
+    return Response::json($product);
 });
 
-Route::post('/ejercicio1', function () {
-    return "POST OK";
+Route::post('/ejercicio2/b', function (Request $request) {
+    $product = ([
+        'name' => $request->get('name'),
+        'description' => $request->get('description'),
+        'price' => $request->get('price'),
+    ]);
+    if ($request->get('price')<0) {
+        return Response::json(['message' => 'Price can\'t be less than 0'], 422);
+    } else {
+        return Response::json($product);
+    }
+});;
+
+Route::post('/ejercicio2/c', function (Request $request) {
+    $product = ([
+        'name' => $request->get('name'),
+        'description' => $request->get('description'),
+        'price' => $request->get('price'),
+    ]);
+
+    switch ($request->get('discount')) {
+        case 'SAVE5':
+            $product['discount'] = 5;
+            break;
+        case 'SAVE10':
+            $product['discount'] = 10;
+            break;
+        case 'SAVE15':
+            $product['discount'] = 15;
+            break;
+        default:
+            $product['discount'] = 0;
+            break;
+    }
+
+    if($product['discount'] == 0) {
+        return Response::json($product);
+    }else
+        $product['price'] = $product['price'] - $product['price'] * $product['discount'] / 100;
+        return Response::json($product);
 });
