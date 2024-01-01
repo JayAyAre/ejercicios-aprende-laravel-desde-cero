@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use http\Client\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -50,7 +51,7 @@ class ProductController extends Controller
         'updated_at' => $request->updated_at
     ];*/
     $message = 'Product created successfully';
-
+    Log::info('Product created', ['product' => $product]);
     return response()->json([
         'message' => $message,
         'product' => $product
@@ -112,6 +113,8 @@ class ProductController extends Controller
   {
     $this->authorize('delete', $product);
     $productDeleted = $product;
+    Log::info('Product deleted', ['product' => $productDeleted]);
+
     $product->delete();
     $message = 'Product deleted successfully';
 
